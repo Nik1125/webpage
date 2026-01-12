@@ -1,0 +1,26 @@
+{
+  "name": "vendingpro-web",
+  "version": "1.0.0",
+  "description": "VendingPro website with Retell AI chat and voice integration",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev"
+  },
+  "keywords": [
+    "vending",
+    "retell-ai",
+    "chat",
+    "voice"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "retell-sdk": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.0",
+    "vercel": "^38.0.0"
+  }
+}
