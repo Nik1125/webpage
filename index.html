@@ -428,11 +428,8 @@
         // Функция для создания web call (требует серверный endpoint)
         async function createWebCall() {
             try {
-                // Вызов серверного endpoint, который создает web call
-                // Серверный endpoint должен вызывать Retell API:
-                // POST https://api.retellai.com/v2/create-web-call
-                // Headers: { Authorization: "Bearer YOUR_RETELL_API_KEY" }
-                // Body: { agent_id: "YOUR_VOICE_AGENT_ID" }
+                console.log('Calling API endpoint:', RETELL_CONFIG.createCallEndpoint);
+                console.log('Agent ID:', RETELL_CONFIG.agentId);
                 
                 const response = await fetch(RETELL_CONFIG.createCallEndpoint, {
                     method: 'POST',
@@ -444,41 +441,49 @@
                     })
                 });
 
+                console.log('API Response status:', response.status);
+
                 if (!response.ok) {
-                    throw new Error('Failed to create web call');
+                    const errorText = await response.text();
+                    console.error('API Error:', errorText);
+                    throw new Error(`API вернул ошибку ${response.status}: ${errorText}`);
                 }
 
                 const data = await response.json();
+                console.log('API Response data:', data);
                 return data.access_token;
             } catch (error) {
                 console.error('Error creating web call:', error);
-                alert('Ошибка создания звонка. Убедитесь, что серверный endpoint настроен правильно.');
+                alert('Ошибка создания звонка:\n\n' + error.message + '\n\nПроверьте:\n' +
+                      '1. API endpoint настроен на Vercel\n' +
+                      '2. Переменная RETELL_API_KEY установлена\n' +
+                      '3. Используется правильный голосовой агент ID');
                 throw error;
             }
         }
 
         // Функция для старта web call
         async function startWebCall() {
+            console.log('startWebCall called');
             if (isCallActive) {
                 alert('Звонок уже активен');
                 return;
             }
 
             try {
+                console.log('Creating web call...');
                 // Получаем access token от сервера
                 const accessToken = await createWebCall();
+                console.log('Access token received');
                 
                 // Инициализируем SDK (если еще не инициализирован)
                 if (!retellWebClient) {
-                    // Для использования SDK в HTML:
-                    // 1. Установите через npm: npm install retell-client-js-sdk
-                    // 2. Используйте bundler для сборки
-                    // 3. Или подключите как ES модуль
-                    
-                    alert('Retell Web SDK не подключен. Для работы web call необходимо:\n' +
-                          '1. Установить SDK: npm install retell-client-js-sdk\n' +
-                          '2. Настроить серверный endpoint для создания web call\n' +
-                          '3. Импортировать и использовать RetellWebClient');
+                    console.error('Retell Web SDK not initialized');
+                    alert('Retell Web SDK не подключен.\n\nДля работы web call необходимо:\n\n' +
+                          '1. Подключить Retell Web SDK\n' +
+                          '2. Убедиться, что API endpoint настроен\n' +
+                          '3. Использовать голосовой агент (не чат-агент)\n\n' +
+                          'Проверьте консоль браузера для деталей.');
                     return;
                 }
 
@@ -549,12 +554,18 @@
             const callButton = document.getElementById('call-button');
             if (callButton) {
                 callButton.addEventListener('click', function() {
+                    console.log('Call button clicked');
                     if (isCallActive) {
                         stopWebCall();
                     } else {
-                        startWebCall();
+                        startWebCall().catch(error => {
+                            console.error('Error in startWebCall:', error);
+                            alert('Ошибка: ' + (error.message || error));
+                        });
                     }
                 });
+            } else {
+                console.error('Call button not found!');
             }
 
             // Инициализируем SDK (если подключен)
