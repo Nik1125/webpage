@@ -578,7 +578,11 @@
             }
 
             // Инициализируем SDK (если подключен)
-            initRetellSDK();
+            initRetellSDK().then(initialized => {
+                if (!initialized) {
+                    console.warn('Retell Web SDK не инициализирован. Web call не будет работать.');
+                }
+            });
         });
     </script>
 </body></html>
