@@ -413,16 +413,25 @@
 
         // Функция для инициализации Retell Web SDK
         async function initRetellSDK() {
-            // Для использования SDK нужно установить через npm:
-            // npm install retell-client-js-sdk
-            // И импортировать:
-            // import { RetellWebClient } from "retell-client-js-sdk";
-            
-            // Если используете в HTML без bundler, нужно подключить через модуль:
-            // <script type="module" src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@latest/dist/index.js"></script>
-            
-            // Для production лучше использовать bundler (webpack, vite и т.д.)
-            console.warn('Retell Web SDK должен быть подключен для работы web call');
+            try {
+                // Загружаем SDK через CDN с ES модулями
+                // Используем jsDelivr CDN для динамического импорта
+                const module = await import('https://cdn.jsdelivr.net/npm/retell-client-js-sdk@latest/+esm');
+                // SDK может экспортировать как default или named export
+                const RetellWebClient = module.RetellWebClient || module.default?.RetellWebClient || module.default;
+                
+                if (!RetellWebClient) {
+                    throw new Error('RetellWebClient не найден в модуле');
+                }
+                
+                retellWebClient = new RetellWebClient();
+                console.log('Retell Web SDK инициализирован успешно');
+                return true;
+            } catch (error) {
+                console.error('Ошибка загрузки Retell Web SDK:', error);
+                console.warn('Для работы web call необходим Retell Web SDK. Проверьте консоль для деталей.');
+                return false;
+            }
         }
 
         // Функция для создания web call (требует серверный endpoint)
