@@ -4,9 +4,9 @@
   "description": "VendingPro website with Retell AI chat and voice integration",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "npx serve . -l 3000",
     "build": "echo 'No build step required'",
-    "start": "vercel dev"
+    "start": "npx serve . -l 3000"
   },
   "keywords": [
     "vending",

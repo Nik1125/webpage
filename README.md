@@ -36,11 +36,14 @@ RETELL_API_KEY=your_retell_api_key_here
 
 ### 4. Локальная разработка
 
+**Для статического сайта (без API endpoints):**
 ```bash
 npm run dev
 ```
 
 Проект будет доступен на `http://localhost:3000`
+
+**Примечание:** API endpoints (`/api/create-web-call`) будут работать только после деплоя на Vercel. Для полной локальной разработки с API используйте Vercel CLI напрямую (не через npm script).
 
 ### 5. Деплой на Vercel
 
