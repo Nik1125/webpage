@@ -424,6 +424,41 @@
         let retellWebClient = null;
         let isCallActive = false;
 
+        // Функция для обновления UI при изменении статуса звонка
+        function updateCallUI() {
+            const callButton = document.getElementById('call-button');
+            const callButtonIcon = document.getElementById('call-button-icon');
+            const callControlPanel = document.getElementById('call-control-panel');
+            
+            if (isCallActive) {
+                // Звонок активен
+                if (callButton) {
+                    callButton.classList.remove('bg-accent-orange', 'hover:bg-orange-600');
+                    callButton.classList.add('bg-green-500', 'hover:bg-green-600');
+                    callButton.title = 'Звонок активен (нажмите чтобы завершить)';
+                }
+                if (callButtonIcon) {
+                    callButtonIcon.textContent = 'phone_in_talk';
+                }
+                if (callControlPanel) {
+                    callControlPanel.classList.remove('hidden');
+                }
+            } else {
+                // Звонок не активен
+                if (callButton) {
+                    callButton.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    callButton.classList.add('bg-accent-orange', 'hover:bg-orange-600');
+                    callButton.title = 'Позвонить агенту';
+                }
+                if (callButtonIcon) {
+                    callButtonIcon.textContent = 'phone';
+                }
+                if (callControlPanel) {
+                    callControlPanel.classList.add('hidden');
+                }
+            }
+        }
+
         // Функция для инициализации Retell Web SDK
         async function initRetellSDK() {
             try {
