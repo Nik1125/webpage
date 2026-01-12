@@ -584,32 +584,6 @@
 
         // Wait for Retell widget to load and integrate with custom buttons
         window.addEventListener('load', function() {
-            // Кнопка чата
-            const chatButton = document.getElementById('chat-button');
-            if (chatButton) {
-                chatButton.addEventListener('click', function() {
-                    // Try multiple methods to open Retell chat widget
-                    const retellButton = document.querySelector('button[aria-label*="chat"], button[aria-label*="Chat"], [class*="retell"], [id*="retell-widget-button"], button[data-retell]');
-                    if (retellButton && retellButton.offsetParent !== null) {
-                        retellButton.click();
-                    } else {
-                        // Try to find and click any Retell widget trigger
-                        setTimeout(function() {
-                            const allButtons = document.querySelectorAll('button');
-                            for (let btn of allButtons) {
-                                if ((btn.id && btn.id.includes('retell')) || 
-                                    (btn.className && (btn.className.includes('retell') || btn.className.includes('chat-widget')))) {
-                                    if (btn.offsetParent !== null) {
-                                        btn.click();
-                                        break;
-                                    }
-                                }
-                            }
-                        }, 100);
-                    }
-                });
-            }
-
             // Кнопка звонка
             const callButton = document.getElementById('call-button');
             if (callButton) {
